@@ -189,15 +189,15 @@ export class MIDIPlayer {
     muteOn.onclick = () => {
       muteOn.style.display = "none";
       muteOff.style.display = "initial";
-      this.midy.handleMasterVolume(0);
+      this.midy.setMasterVolume(0);
     };
     muteOff.onclick = () => {
       muteOn.style.display = "initial";
       muteOff.style.display = "none";
-      this.midy.handleMasterVolume(1);
+      this.midy.setMasterVolume(1);
     };
     volumeBar.oninput = (event) => {
-      this.midy.handleMasterVolume(event.target.value);
+      this.midy.setMasterVolume(event.target.value);
     };
     const div = document.createElement("div");
     div.style.display = "flex";
