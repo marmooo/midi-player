@@ -41,6 +41,9 @@ function applyTheme(midiPlayer) {
   for (const btn of root.getElementsByClassName("midi-player-range")) {
     btn.classList.add("form-range", "p-1");
   }
+  for (const btn of root.getElementsByClassName("volume")) {
+    btn.classList.add("w-auto");
+  }
 }
 
 function arrangeLayout(midiPlayer) {

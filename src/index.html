@@ -133,7 +133,10 @@ await midiPlayer.loadMIDI("midi/travel.mid");</code></pre>
     btn.classList.add("p-1");
   }
   for (const btn of root.getElementsByClassName("midi-player-range")) {
-    btn.classList.add("form-range");
+    btn.classList.add("form-range", "p-1");
+  }
+  for (const btn of root.getElementsByClassName("volume")) {
+    btn.classList.add("w-auto");
   }
 }
 
