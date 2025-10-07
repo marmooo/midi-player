@@ -120,7 +120,7 @@ export class MIDIPlayer {
   }
 
   stop() {
-    const stop = this.button("start", "start", "stop", "initial");
+    const stop = this.button("start", "midi-player-start", "stop", "initial");
     stop.onclick = () => {
       if (!this.midy.isPlaying) return;
       clearInterval(this.timer);
@@ -134,9 +134,9 @@ export class MIDIPlayer {
   }
 
   playPauseResume() {
-    const play = this.button("start", "start", "play_arrow", "initial");
-    const pause = this.button("pause", "pause", "pause", "none");
-    const resume = this.button("resume", "resume", "play_arrow", "none");
+    const play = this.button("start", "midi-player-start", "play_arrow", "initial");
+    const pause = this.button("pause", "midi-player-pause", "pause", "none");
+    const resume = this.button("resume", "midi-player-resume", "play_arrow", "none");
     play.onclick = async () => {
       if (this.midy.isPlaying || this.midy.isPaused) return;
       play.style.display = "none";
@@ -179,13 +179,13 @@ export class MIDIPlayer {
   }
 
   volumeText() {
-    return this.text("volume", "volumeText");
+    return this.text("volume", "midi-player-volumeText");
   }
 
   volume() {
-    const muteOn = this.button("mute ON", "muteOn", "volume_down", "initial");
-    const muteOff = this.button("mute OFF", "muteOff", "volume_off", "none");
-    const volumeBar = this.formRange("volume", "volume", 1, "none");
+    const muteOn = this.button("mute ON", "midi-player-muteOn", "volume_down", "initial");
+    const muteOff = this.button("mute OFF", "midi-player-muteOff", "volume_off", "none");
+    const volumeBar = this.formRange("volume", "midi-player-volume", 1, "none");
     muteOn.onclick = () => {
       muteOn.style.display = "none";
       muteOff.style.display = "initial";
@@ -217,7 +217,7 @@ export class MIDIPlayer {
   seekBar() {
     const seekBar = this.formRange(
       "playback position",
-      "seekBar",
+      "midi-player-seekBar",
       0,
       "initial",
     );
@@ -233,20 +233,20 @@ export class MIDIPlayer {
   }
 
   currTime() {
-    const currTime = this.text("0:00", "currTime");
+    const currTime = this.text("0:00", "midi-player-currTime");
     this.currTimeNode = currTime;
     return currTime;
   }
 
   totalTime() {
-    const totalTime = this.text("0:00", "totalTime");
+    const totalTime = this.text("0:00", "midi-player-totalTime");
     this.totalTimeNode = totalTime;
     return totalTime;
   }
 
   currTimeTotalTime() {
     const currTime = this.currTime();
-    const separator = this.text("/", "timeSeparator");
+    const separator = this.text("/", "midi-player-timeSeparator");
     const totalTime = this.totalTime();
     const div = document.createElement("div");
     div.style.display = "flex";
