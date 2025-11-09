@@ -1,5 +1,5 @@
 export class MIDIPlayer {
-  soundFontDir = "https://soundfonts.pages.dev/GeneralUser_GS_v1.471";
+  soundFontURL = "https://soundfonts.pages.dev/GeneralUser_GS_v1.471";
   midy;
   timer;
   currentTime = 0;
@@ -94,26 +94,35 @@ export class MIDIPlayer {
   }
 
   setSoundFontDir(dir) {
-    this.soundFontDir = dir;
+    this.soundFontURL = dir;
+  }
+
+  getSoundFontPaths() {
+    const paths = [];
+    const { midy, soundFontURL } = this;
+    for (const instrument of midy.instruments) {
+      const [bankNumber, programNumber] = instrument.split(":").map(Number);
+      const table = midy.soundFontTable[programNumber];
+      if (table.has(bankNumber)) continue;
+      const program = programNumber.toString().padStart(3, "0");
+      const path = bankNumber === 128
+        ? `${soundFontURL}/128.sf3`
+        : `${soundFontURL}/${program}.sf3`;
+      paths.push(path);
+    }
+    return paths;
   }
 
   async start() {
-    if (this.midy.soundFonts.length === 0) {
-      for (const instrument of this.midy.instruments) {
-        const [bankNumber, programNumber] = instrument.split(":").map(Number);
-        if (this.midy.soundFontTable[programNumber].has(bankNumber)) continue;
-        const program = programNumber.toString().padStart(3, "0");
-        if (bankNumber === 128) {
-          await this.midy.loadSoundFont(`${this.soundFontDir}/128.sf3`);
-        } else {
-          await this.midy.loadSoundFont(`${this.soundFontDir}/${program}.sf3`);
-        }
-      }
+    const midy = this.midy;
+    if (midy.soundFonts.length === 0) {
+      const paths = this.getSoundFontPaths();
+      await midy.loadSoundFont(paths);
     }
     this.startTimer();
-    await this.midy.start();
+    await midy.start();
     clearInterval(this.timer);
-    if (!this.midy.isPaused && this.currTimeNode) {
+    if (!midy.isPaused && this.currTimeNode) {
       this.currTimeNode.textContent = "0:00";
       this.seekBarNode.value = 0;
     }
@@ -134,9 +143,19 @@ export class MIDIPlayer {
   }
 
   playPauseResume() {
-    const play = this.button("start", "midi-player-start", "play_arrow", "initial");
+    const play = this.button(
+      "start",
+      "midi-player-start",
+      "play_arrow",
+      "initial",
+    );
     const pause = this.button("pause", "midi-player-pause", "pause", "none");
-    const resume = this.button("resume", "midi-player-resume", "play_arrow", "none");
+    const resume = this.button(
+      "resume",
+      "midi-player-resume",
+      "play_arrow",
+      "none",
+    );
     play.onclick = async () => {
       if (this.midy.isPlaying || this.midy.isPaused) return;
       play.style.display = "none";
@@ -183,8 +202,18 @@ export class MIDIPlayer {
   }
 
   volume() {
-    const muteOn = this.button("mute ON", "midi-player-muteOn", "volume_down", "initial");
-    const muteOff = this.button("mute OFF", "midi-player-muteOff", "volume_off", "none");
+    const muteOn = this.button(
+      "mute ON",
+      "midi-player-muteOn",
+      "volume_down",
+      "initial",
+    );
+    const muteOff = this.button(
+      "mute OFF",
+      "midi-player-muteOff",
+      "volume_off",
+      "none",
+    );
     const volumeBar = this.formRange("volume", "midi-player-volume", 1, "none");
     muteOn.onclick = () => {
       muteOn.style.display = "none";
