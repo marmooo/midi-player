@@ -128,18 +128,56 @@ export class MIDIPlayer {
     }
   }
 
+  async handleStop() {
+    const midy = this.midy;
+    if (!midy.isPlaying) return;
+    clearInterval(this.timer);
+    this.playNode.style.display = "initial";
+    this.pauseNode.style.display = "none";
+    this.resumeNode.style.display = "none";
+    await midy.stop();
+  }
+
   stop() {
     const stop = this.button("start", "midi-player-start", "stop", "initial");
-    stop.onclick = () => {
-      if (!this.midy.isPlaying) return;
-      clearInterval(this.timer);
-      this.playNode.style.display = "initial";
-      this.pauseNode.style.display = "none";
-      this.resumeNode.style.display = "none";
-      this.midy.stop();
-    };
+    stop.onclick = () => this.handleStop();
     this.stopNode = stop;
     return stop;
+  }
+
+  async handlePlay() {
+    const { midy, playNode, pauseNode } = this;
+    if (midy.isPlaying || midy.isPaused) return;
+    playNode.style.display = "none";
+    pauseNode.style.display = "initial";
+    await this.start();
+    if (!midy.isPaused) {
+      pauseNode.style.display = "none";
+      playNode.style.display = "initial";
+    }
+  }
+
+  handlePause() {
+    const midy = this.midy;
+    if (!midy.isPlaying || midy.isPaused) return;
+    this.pauseNode.style.display = "none";
+    this.resumeNode.style.display = "initial";
+    clearInterval(this.timer);
+    midy.pause();
+  }
+
+  async handleResume() {
+    const { midy, playNode, pauseNode, resumeNode } = this;
+    if (!midy.isPaused) return;
+    pauseNode.style.display = "initial";
+    resumeNode.style.display = "none";
+    this.startTimer();
+    await midy.resume();
+    clearInterval(this.timer);
+    if (!midy.isPaused) {
+      pauseNode.style.display = "none";
+      playNode.style.display = "initial";
+    }
   }
 
   playPauseResume() {
@@ -156,44 +194,18 @@ export class MIDIPlayer {
       "play_arrow",
       "none",
     );
-    play.onclick = async () => {
-      if (this.midy.isPlaying || this.midy.isPaused) return;
-      play.style.display = "none";
-      pause.style.display = "initial";
-      await this.start();
-      if (!this.midy.isPaused) {
-        pause.style.display = "none";
-        play.style.display = "initial";
-      }
-    };
-    pause.onclick = () => {
-      if (!this.midy.isPlaying || this.midy.isPaused) return;
-      pause.style.display = "none";
-      resume.style.display = "initial";
-      clearInterval(this.timer);
-      this.midy.pause();
-    };
-    resume.onclick = async () => {
-      if (!this.midy.isPaused) return;
-      pause.style.display = "initial";
-      resume.style.display = "none";
-      this.startTimer();
-      await this.midy.resume();
-      clearInterval(this.timer);
-      if (!this.midy.isPaused) {
-        pause.style.display = "none";
-        play.style.display = "initial";
-      }
-    };
+    this.playNode = play;
+    this.pauseNode = pause;
+    this.resumeNode = resume;
+    play.onclick = () => this.handlePlay();
+    pause.onclick = () => this.handlePause();
+    resume.onclick = () => this.handleResume();
     const div = document.createElement("div");
     div.style.display = "flex";
     div.style.alignItems = "center";
     div.appendChild(play);
     div.appendChild(pause);
     div.appendChild(resume);
-    this.playNode = play;
-    this.pauseNode = pause;
-    this.resumeNode = resume;
     return div;
   }
 
