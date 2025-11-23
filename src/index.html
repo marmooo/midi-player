@@ -98,7 +98,8 @@
 // import { MidyGM2 as Midy } from "midy/dist/midy-GM2.min.js";
 // import { Midy } from "midy/dist/midy.min.js";
 
-const midy = new Midy(new AudioContext());</code></pre>
+const midy = new Midy(new AudioContext());
+await midy.audioContext.suspend();</code></pre>
           <p>3. Add Player.</p>
           <pre><code class="language-javascript">const midy = new Midy(new AudioContext());
 const midiPlayer = new MIDIPlayer(midy);
@@ -141,6 +142,7 @@ await midiPlayer.loadMIDI("midi/travel.mid");</code></pre>
 }
 
 const midy = new Midy(new AudioContext());
+await midy.audioContext.suspend();
 const midiPlayer = new MIDIPlayer(midy);
 midiPlayer.defaultLayout();
 applyTheme(midiPlayer);
@@ -167,6 +169,7 @@ await midiPlayer.loadMIDI("midi/hitogo2.mid");</code></pre>
 }
 
 const midy = new Midy(new AudioContext());
+await midy.audioContext.suspend();
 const midiPlayer = new MIDIPlayer(midy);
 arrangeLayout(midiPlayer);
 applyTheme(midiPlayer);

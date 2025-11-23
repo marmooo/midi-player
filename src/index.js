@@ -54,6 +54,7 @@ function arrangeLayout(midiPlayer) {
 
 async function simpleTest() {
   const midy = new Midy(new AudioContext());
+  await midy.audioContext.suspend();
   const midiPlayer = new MIDIPlayer(midy);
   midiPlayer.defaultLayout();
   document.getElementById("simpleTest").appendChild(midiPlayer.root);
@@ -62,6 +63,7 @@ async function simpleTest() {
 
 async function stylingTest() {
   const midy = new Midy(new AudioContext());
+  await midy.audioContext.suspend();
   const midiPlayer = new MIDIPlayer(midy);
   midiPlayer.defaultLayout();
   applyTheme(midiPlayer);
@@ -71,6 +73,7 @@ async function stylingTest() {
 
 async function arrangingTest() {
   const midy = new Midy(new AudioContext());
+  await midy.audioContext.suspend();
   const midiPlayer = new MIDIPlayer(midy);
   arrangeLayout(midiPlayer);
   applyTheme(midiPlayer);

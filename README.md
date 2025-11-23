@@ -32,6 +32,7 @@
 import { Midy } from "midy/dist/midy.min.js";
 
 const midy = new Midy(new AudioContext());
+await midy.audioContext.suspend();
 ```
 
 3. Add Player.
