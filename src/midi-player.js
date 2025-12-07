@@ -101,14 +101,13 @@ export class MIDIPlayer {
     const paths = [];
     const { midy, soundFontURL } = this;
     for (const instrument of midy.instruments) {
-      const [bankNumber, programNumber] = instrument.split(":").map(Number);
-      const table = midy.soundFontTable[programNumber];
-      if (table.has(bankNumber)) continue;
-      const program = programNumber.toString().padStart(3, "0");
-      const path = bankNumber === 128
-        ? `${soundFontURL}/128.sf3`
-        : `${soundFontURL}/${program}.sf3`;
-      paths.push(path);
+      const [bank, program] = instrument.split(":");
+      const bankNumber = Number(bank);
+      const programNumber = Number(program);
+      const index = midy.soundFontTable[programNumber][bankNumber];
+      if (index !== undefined) continue;
+      const baseName = bankNumber === 128 ? "128" : program;
+      paths.push(`${soundFontURL}/${baseName}.sf3`);
     }
     return paths;
   }
