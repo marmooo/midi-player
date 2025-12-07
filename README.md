@@ -58,7 +58,7 @@ but you can also set it as follows.
 
 ```
 const midiPlayer = new MIDIPlayer(midy);
-midiPlayer.soundFontURL = "https://soundfonts.pages.dev/SGM-V2.01";
+midiPlayer.soundFontURL = "https://soundfonts.pages.dev/GeneralUser_GS_v1.471";
 ```
 
 ```
