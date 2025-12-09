@@ -79,16 +79,26 @@ export class MIDIPlayer {
 
   startTimer() {
     const endTime = this.midy.totalTime;
-    this.timer = setInterval(() => {
+    this.stopTimer();
+    const update = () => {
       const now = this.midy.currentTime();
-      const seconds = Math.ceil(now);
       if (this.currTimeNode) {
+        const seconds = Math.ceil(now);
         this.currTimeNode.textContent = this.formatTime(seconds);
       }
       if (this.seekBarNode) {
         this.seekBarNode.value = now / endTime;
       }
-    }, this.currTimeInterval);
+      this.timer = requestAnimationFrame(update);
+    };
+    this.timer = requestAnimationFrame(update);
+  }
+
+  stopTimer() {
+    if (this.timer) {
+      cancelAnimationFrame(this.timer);
+      this.timer = null;
+    }
   }
 
   async loadMIDI(file) {
@@ -126,7 +136,7 @@ export class MIDIPlayer {
     }
     this.startTimer();
     await midy.start();
-    clearInterval(this.timer);
+    this.stopTimer();
     this.isPlaying = false;
     if (!midy.isPaused && this.currTimeNode) {
       this.currTimeNode.textContent = "0:00";
@@ -138,10 +148,10 @@ export class MIDIPlayer {
     const midy = this.midy;
     if (!midy.isPlaying) return;
     this.isStopping = true;
-    clearInterval(this.timer);
     this.playNode.style.display = "initial";
     this.pauseNode.style.display = "none";
     this.resumeNode.style.display = "none";
+    this.stopTimer();
     await midy.stop();
     this.isPlaying = false;
   }
@@ -167,14 +177,14 @@ export class MIDIPlayer {
     }
   }
 
-  handlePause() {
+  async handlePause() {
     const midy = this.midy;
     if (!midy.isPlaying || midy.isPaused) return;
     this.isPausing = true;
     this.pauseNode.style.display = "none";
     this.resumeNode.style.display = "initial";
-    clearInterval(this.timer);
-    midy.pause();
+    this.stopTimer();
+    await midy.pause();
     this.isPausing = false;
     this.isPaused = true;
   }
@@ -187,7 +197,7 @@ export class MIDIPlayer {
     resumeNode.style.display = "none";
     this.startTimer();
     await midy.resume();
-    clearInterval(this.timer);
+    this.stopTimer();
     this.isPlaying = false;
     if (!midy.isPaused) {
       pauseNode.style.display = "none";
