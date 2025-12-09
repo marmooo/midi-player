@@ -130,10 +130,7 @@ export class MIDIPlayer {
   async start() {
     this.isPlaying = true;
     const midy = this.midy;
-    if (midy.soundFonts.length === 0) {
-      const paths = this.getSoundFontPaths();
-      await midy.loadSoundFont(paths);
-    }
+    await midy.loadSoundFont(this.getSoundFontPaths());
     this.startTimer();
     await midy.start();
     this.stopTimer();
