@@ -11,6 +11,11 @@ export class MIDIPlayer {
   pauseNode;
   resumeNode;
   stopNode;
+  isPlaying = false;
+  isPausing = false;
+  isPaused = false;
+  isStopping = false;
+  isSeeking = false;
 
   constructor(midy) {
     this.midy = midy;
@@ -113,6 +118,7 @@ export class MIDIPlayer {
   }
 
   async start() {
+    this.isPlaying = true;
     const midy = this.midy;
     if (midy.soundFonts.length === 0) {
       const paths = this.getSoundFontPaths();
@@ -121,6 +127,7 @@ export class MIDIPlayer {
     this.startTimer();
     await midy.start();
     clearInterval(this.timer);
+    this.isPlaying = false;
     if (!midy.isPaused && this.currTimeNode) {
       this.currTimeNode.textContent = "0:00";
       this.seekBarNode.value = 0;
@@ -130,11 +137,13 @@ export class MIDIPlayer {
   async handleStop() {
     const midy = this.midy;
     if (!midy.isPlaying) return;
+    this.isStopping = true;
     clearInterval(this.timer);
     this.playNode.style.display = "initial";
     this.pauseNode.style.display = "none";
     this.resumeNode.style.display = "none";
     await midy.stop();
+    this.isPlaying = false;
   }
 
   stop() {
@@ -147,9 +156,11 @@ export class MIDIPlayer {
   async handlePlay() {
     const { midy, playNode, pauseNode } = this;
     if (midy.isPlaying || midy.isPaused) return;
+    this.isPlaying = true;
     playNode.style.display = "none";
     pauseNode.style.display = "initial";
     await this.start();
+    this.isPlaying = false;
     if (!midy.isPaused) {
       pauseNode.style.display = "none";
       playNode.style.display = "initial";
@@ -159,20 +170,25 @@ export class MIDIPlayer {
   handlePause() {
     const midy = this.midy;
     if (!midy.isPlaying || midy.isPaused) return;
+    this.isPausing = true;
     this.pauseNode.style.display = "none";
     this.resumeNode.style.display = "initial";
     clearInterval(this.timer);
     midy.pause();
+    this.isPausing = false;
+    this.isPaused = true;
   }
 
   async handleResume() {
     const { midy, playNode, pauseNode, resumeNode } = this;
     if (!midy.isPaused) return;
+    this.isPlaying = true;
     pauseNode.style.display = "initial";
     resumeNode.style.display = "none";
     this.startTimer();
     await midy.resume();
     clearInterval(this.timer);
+    this.isPlaying = false;
     if (!midy.isPaused) {
       pauseNode.style.display = "none";
       playNode.style.display = "initial";
@@ -262,11 +278,13 @@ export class MIDIPlayer {
       "initial",
     );
     seekBar.oninput = (event) => {
+      this.isSeeking = true;
       const time = event.target.value * this.midy.totalTime;
       this.midy.seekTo(time);
       if (this.currTimeNode) {
         this.currTimeNode.textContent = this.formatTime(time);
       }
+      this.isSeeking = false;
     };
     this.seekBarNode = seekBar;
     return seekBar;
