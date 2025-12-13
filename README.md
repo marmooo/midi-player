@@ -6,6 +6,7 @@
 ## Demo
 
 - [Basic usage](https://marmooo.github.io/midi-player/)
+- [Humidy](https://marmooo.github.io/humidy/) - GM2 MIDI mixer app
 
 ## Usage
 
