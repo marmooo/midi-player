@@ -7,6 +7,7 @@
 
 - [Basic usage](https://marmooo.github.io/midi-player/)
 - [Humidy](https://marmooo.github.io/humidy/) - GM2 MIDI mixer app
+- [Timidy](https://marmooo.github.io/timidy/) - Timidity++ style MIDI player
 
 ## Usage
 
