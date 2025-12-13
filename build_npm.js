@@ -10,7 +10,7 @@ await build({
   },
   package: {
     name: "@marmooo/midi-player",
-    version: "0.0.3",
+    version: "0.0.4",
     description: "<midi-player> HTML elements powered by Midy.",
     license: "Apache-2.0",
     repository: {
