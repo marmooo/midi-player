@@ -13,9 +13,9 @@
 // import { MidyGM2 as Midy } from "midy/dist/midy-GM2.min.js";
 // import { Midy } from "midy/dist/midy.min.js";
 
-const midy = new Midy(new AudioContext());
-await midy.audioContext.suspend();</code></pre><p>3. Add Player.<pre><code class=language-javascript>const midy = new Midy(new AudioContext());
-const midiPlayer = new MIDIPlayer(midy);
+const audioContext = new AudioContext();
+if (audioContext.state === "running") await midy.audioContext.suspend();
+const midy = new Midy(audioContext);</code></pre><p>3. Add player.<pre><code class=language-javascript>const midiPlayer = new MIDIPlayer(midy);
 midiPlayer.defaultLayout();
 document.getElementById("simpleTest").appendChild(midiPlayer.root);
 await midiPlayer.loadMIDI("midi/travel.mid");</code></pre></div></div><div class=card><div class=card-header>An example of styling using <a href=https://github.com/twbs/bootstrap>Bootstrap</a>.
@@ -36,8 +36,9 @@ and also via JavaScript.<pre><code class=language-javascript>function applyTheme
   }
 }
 
-const midy = new Midy(new AudioContext());
-await midy.audioContext.suspend();
+const audioContext = new AudioContext();
+if (audioContext.state === "running") await midy.audioContext.suspend();
+const midy = new Midy(audioContext);
 const midiPlayer = new MIDIPlayer(midy);
 midiPlayer.defaultLayout();
 applyTheme(midiPlayer);
@@ -48,8 +49,9 @@ await midiPlayer.loadMIDI("midi/hitogo2.mid");</code></pre></div></div><div clas
   div.appendChild(midiPlayer.seekBar());
 }
 
-const midy = new Midy(new AudioContext());
-await midy.audioContext.suspend();
+const audioContext = new AudioContext();
+if (audioContext.state === "running") await midy.audioContext.suspend();
+const midy = new Midy(audioContext);
 const midiPlayer = new MIDIPlayer(midy);
 arrangeLayout(midiPlayer);
 applyTheme(midiPlayer);

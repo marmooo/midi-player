@@ -99,11 +99,11 @@
 // import { MidyGM2 as Midy } from "midy/dist/midy-GM2.min.js";
 // import { Midy } from "midy/dist/midy.min.js";
 
-const midy = new Midy(new AudioContext());
-await midy.audioContext.suspend();</code></pre>
-          <p>3. Add Player.</p>
-          <pre><code class="language-javascript">const midy = new Midy(new AudioContext());
-const midiPlayer = new MIDIPlayer(midy);
+const audioContext = new AudioContext();
+if (audioContext.state === "running") await midy.audioContext.suspend();
+const midy = new Midy(audioContext);</code></pre>
+          <p>3. Add player.</p>
+          <pre><code class="language-javascript">const midiPlayer = new MIDIPlayer(midy);
 midiPlayer.defaultLayout();
 document.getElementById("simpleTest").appendChild(midiPlayer.root);
 await midiPlayer.loadMIDI("midi/travel.mid");</code></pre>
@@ -142,8 +142,9 @@ await midiPlayer.loadMIDI("midi/travel.mid");</code></pre>
   }
 }
 
-const midy = new Midy(new AudioContext());
-await midy.audioContext.suspend();
+const audioContext = new AudioContext();
+if (audioContext.state === "running") await midy.audioContext.suspend();
+const midy = new Midy(audioContext);
 const midiPlayer = new MIDIPlayer(midy);
 midiPlayer.defaultLayout();
 applyTheme(midiPlayer);
@@ -169,8 +170,9 @@ await midiPlayer.loadMIDI("midi/hitogo2.mid");</code></pre>
   div.appendChild(midiPlayer.seekBar());
 }
 
-const midy = new Midy(new AudioContext());
-await midy.audioContext.suspend();
+const audioContext = new AudioContext();
+if (audioContext.state === "running") await midy.audioContext.suspend();
+const midy = new Midy(audioContext);
 const midiPlayer = new MIDIPlayer(midy);
 arrangeLayout(midiPlayer);
 applyTheme(midiPlayer);
