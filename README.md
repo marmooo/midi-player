@@ -33,8 +33,9 @@
 // import { MidyGM2 as Midy } from "midy/dist/midy-GM2.min.js";
 import { Midy } from "midy/dist/midy.min.js";
 
-const midy = new Midy(new AudioContext());
-await midy.audioContext.suspend();
+const audioContext = new AudioContext();
+if (audioContext.state === "running") await audioContext.suspend();
+const midy = new Midy(audioContext);
 ```
 
 3. Add Player.
