@@ -14,7 +14,7 @@
 // import { Midy } from "midy/dist/midy.min.js";
 
 const audioContext = new AudioContext();
-if (audioContext.state === "running") await midy.audioContext.suspend();
+if (audioContext.state === "running") await audioContext.suspend();
 const midy = new Midy(audioContext);</code></pre><p>3. Add player.<pre><code class=language-javascript>const midiPlayer = new MIDIPlayer(midy);
 midiPlayer.defaultLayout();
 document.getElementById("simpleTest").appendChild(midiPlayer.root);
@@ -37,7 +37,7 @@ and also via JavaScript.<pre><code class=language-javascript>function applyTheme
 }
 
 const audioContext = new AudioContext();
-if (audioContext.state === "running") await midy.audioContext.suspend();
+if (audioContext.state === "running") await audioContext.suspend();
 const midy = new Midy(audioContext);
 const midiPlayer = new MIDIPlayer(midy);
 midiPlayer.defaultLayout();
@@ -50,7 +50,7 @@ await midiPlayer.loadMIDI("midi/hitogo2.mid");</code></pre></div></div><div clas
 }
 
 const audioContext = new AudioContext();
-if (audioContext.state === "running") await midy.audioContext.suspend();
+if (audioContext.state === "running") await audioContext.suspend();
 const midy = new Midy(audioContext);
 const midiPlayer = new MIDIPlayer(midy);
 arrangeLayout(midiPlayer);
