@@ -248,7 +248,7 @@ export class MIDIPlayer {
       "volume_off",
       "none",
     );
-    const volumeBar = this.formRange("volume", "midi-player-volume", 1, "none");
+    const volumeBar = this.formRange("volume", "midi-player-volume", 100/128, "none");
     muteOn.onclick = () => {
       muteOn.style.display = "none";
       muteOff.style.display = "initial";
@@ -257,7 +257,7 @@ export class MIDIPlayer {
     muteOff.onclick = () => {
       muteOn.style.display = "initial";
       muteOff.style.display = "none";
-      this.midy.setMasterVolume(1);
+      this.midy.setMasterVolume(Number(volumeBar.value));
     };
     volumeBar.oninput = (event) => {
       this.midy.setMasterVolume(event.target.value);
