@@ -101,6 +101,9 @@ All parts have midi-player-* class so you can be themed with CSS.
   - `midi-player-volumeOn`
   - `midi-player-volumeff`
   - `midi-player-volumeBar`
+  - `midi-player-speed`
+  - `midi-player-repeatOn`
+  - `midi-player-repeatOff`
 
 You can also style the parts using JavaScript and CSS Framework.
 
@@ -121,7 +124,7 @@ Search for the ligature names you want to use from the
 minimize them using [fontconv](https://github.com/marmooo/fontconv).
 
 ```
-fontconv --ligature play_arrow,pause,stop,volume_down,volume_off \
+fontconv --ligature play_arrow,pause,stop,volume_down,volume_off,speed,360,repeat \
   material-icons.woff2 src/midi-player-icons.woff2
 ```
 

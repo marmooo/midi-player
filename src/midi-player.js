@@ -26,6 +26,8 @@ export class MIDIPlayer {
     const div = this.row();
     div.appendChild(this.playPauseResume());
     div.appendChild(this.volume());
+    div.appendChild(this.repeat());
+    div.appendChild(this.speed());
     div.appendChild(this.currTimeTotalTime());
     div.appendChild(this.seekBar());
   }
@@ -248,7 +250,12 @@ export class MIDIPlayer {
       "volume_off",
       "none",
     );
-    const volumeBar = this.formRange("volume", "midi-player-volume", 100/128, "none");
+    const volumeBar = this.formRange(
+      "volume",
+      "midi-player-volume",
+      100 / 128,
+      "none",
+    );
     muteOn.onclick = () => {
       muteOn.style.display = "none";
       muteOff.style.display = "initial";
@@ -274,6 +281,80 @@ export class MIDIPlayer {
     div.onmouseout = () => {
       volumeBar.style.display = "none";
     };
+    return div;
+  }
+
+  speed() {
+    const speedButton = this.button(
+      "reset speed",
+      "midi-player-speed",
+      "speed",
+      "initial",
+    );
+    const speedBar = this.formRange("playback speed", "midi-player-speed", 0.5, "none");
+    speedButton.onclick = () => {
+      speedBar.value = 0.5;
+      this.midy.tempoChange(1);
+      this.stopTimer();
+      this.startTimer();
+      if (this.totalTimeNode) {
+        this.totalTimeNode.textContent = this.formatTime(this.midy.totalTime);
+      }
+    };
+    speedBar.onchange = (event) => {
+      const value = Number(event.target.value);
+      const min = 0.5;
+      const max = 2;
+      const tempo = min * Math.pow(max / min, value);
+      this.midy.tempoChange(tempo);
+      this.stopTimer();
+      this.startTimer();
+      if (this.totalTimeNode) {
+        this.totalTimeNode.textContent = this.formatTime(this.midy.totalTime);
+      }
+    };
+    const div = document.createElement("div");
+    div.style.display = "flex";
+    div.style.alignItems = "center";
+    div.appendChild(speedButton);
+    div.appendChild(speedBar);
+    div.onmouseover = () => {
+      speedBar.style.display = "initial";
+    };
+    div.onmouseout = () => {
+      speedBar.style.display = "none";
+    };
+    return div;
+  }
+
+  repeat() {
+    const repeatOn = this.button(
+      "repeat ON",
+      "midi-player-repeatOn",
+      "turn_right",
+      "initial",
+    );
+    const repeatOff = this.button(
+      "repeat OFF",
+      "midi-player-repeatOff",
+      "repeat",
+      "none",
+    );
+    repeatOn.onclick = () => {
+      repeatOn.style.display = "none";
+      repeatOff.style.display = "initial";
+      this.midy.loop = true;
+    };
+    repeatOff.onclick = () => {
+      repeatOn.style.display = "initial";
+      repeatOff.style.display = "none";
+      this.midy.loop = false;
+    };
+    const div = document.createElement("div");
+    div.style.display = "flex";
+    div.style.alignItems = "center";
+    div.appendChild(repeatOn);
+    div.appendChild(repeatOff);
     return div;
   }
 
