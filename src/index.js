@@ -9,25 +9,13 @@ const highlightjsURL =
 const lightThemeURL = highlightjsURL + "default.min.css";
 const darkThemeURL = highlightjsURL + "dark.min.css";
 
-function loadConfig() {
-  if (localStorage.getItem("darkMode") == 1) {
-    document.documentElement.setAttribute("data-bs-theme", "dark");
-    document.getElementById("highlight-theme").href = darkThemeURL;
-  } else {
-    document.getElementById("highlight-theme").href = lightThemeURL;
-  }
-}
-
 function toggleDarkMode() {
-  if (localStorage.getItem("darkMode") == 1) {
-    localStorage.setItem("darkMode", 0);
-    document.documentElement.setAttribute("data-bs-theme", "light");
-    document.getElementById("highlight-theme").href = lightThemeURL;
-  } else {
-    localStorage.setItem("darkMode", 1);
-    document.documentElement.setAttribute("data-bs-theme", "dark");
-    document.getElementById("highlight-theme").href = darkThemeURL;
-  }
+  const html = document.documentElement;
+  const newTheme = html.getAttribute("data-bs-theme") === "dark"
+    ? "light"
+    : "dark";
+  html.setAttribute("data-bs-theme", newTheme);
+  localStorage.setItem("darkMode", newTheme);
 }
 
 function applyTheme(midiPlayer) {
@@ -84,7 +72,6 @@ async function arrangingTest() {
   await midiPlayer.loadMIDI("midi/0002.mid");
 }
 
-loadConfig();
 hljs.registerLanguage("javascript", javascript);
 hljs.registerLanguage("css", css);
 hljs.highlightAll();
