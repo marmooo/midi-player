@@ -9,6 +9,8 @@ const highlightjsURL =
 const lightThemeURL = highlightjsURL + "default.min.css";
 const darkThemeURL = highlightjsURL + "dark.min.css";
 
+applyHljsTheme(localStorage.getItem("darkMode") ?? "light");
+
 function toggleDarkMode() {
   const html = document.documentElement;
   const newTheme = html.getAttribute("data-bs-theme") === "dark"
@@ -16,6 +18,14 @@ function toggleDarkMode() {
     : "dark";
   html.setAttribute("data-bs-theme", newTheme);
   localStorage.setItem("darkMode", newTheme);
+
+  applyHljsTheme(newTheme);
+}
+
+function applyHljsTheme(theme) {
+  document.getElementById("highlight-theme").href = theme === "dark"
+    ? darkThemeURL
+    : lightThemeURL;
 }
 
 function applyTheme(midiPlayer) {
