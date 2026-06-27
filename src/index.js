@@ -9,7 +9,7 @@ const highlightjsURL =
 const lightThemeURL = highlightjsURL + "default.min.css";
 const darkThemeURL = highlightjsURL + "dark.min.css";
 
-applyHljsTheme(localStorage.getItem("darkMode") ?? "light");
+applyHighlightjsTheme(localStorage.getItem("darkMode") ?? "light");
 
 function toggleDarkMode() {
   const html = document.documentElement;
@@ -19,11 +19,11 @@ function toggleDarkMode() {
   html.setAttribute("data-bs-theme", newTheme);
   localStorage.setItem("darkMode", newTheme);
 
-  applyHljsTheme(newTheme);
+  applyHighlightjsTheme(newTheme);
 }
 
-function applyHljsTheme(theme) {
-  document.getElementById("highlight-theme").href = theme === "dark"
+function applyHighlightjsTheme(theme) {
+  document.getElementById("highlightjs-theme").href = theme === "dark"
     ? darkThemeURL
     : lightThemeURL;
 }
