@@ -9,7 +9,7 @@ const highlightjsURL =
 const lightThemeURL = highlightjsURL + "default.min.css";
 const darkThemeURL = highlightjsURL + "dark.min.css";
 
-applyHighlightjsTheme(localStorage.getItem("darkMode") ?? "light");
+applyHighlightjsTheme(document.documentElement.getAttribute("data-bs-theme"));
 
 function toggleDarkMode() {
   const html = document.documentElement;
