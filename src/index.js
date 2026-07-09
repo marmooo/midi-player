@@ -18,7 +18,6 @@ function toggleDarkMode() {
     : "dark";
   html.setAttribute("data-bs-theme", newTheme);
   localStorage.setItem("darkMode", newTheme);
-
   applyHighlightjsTheme(newTheme);
 }
 
@@ -28,20 +27,20 @@ function applyHighlightjsTheme(theme) {
     : lightThemeURL;
 }
 
-function applyTheme(midiPlayer) {
-  const root = midiPlayer.root;
-  for (const btn of root.getElementsByClassName("midi-player-btn")) {
-    btn.classList.add("btn", "btn-light", "p-1");
+function buildDocumentStylesheet() {
+  const sheet = new CSSStyleSheet();
+  let css = "";
+  for (const stylesheet of document.styleSheets) {
+    try {
+      for (const rule of stylesheet.cssRules) {
+        css += rule.cssText;
+      }
+    } catch {
+      // skip
+    }
   }
-  for (const btn of root.getElementsByClassName("midi-player-text")) {
-    btn.classList.add("p-1");
-  }
-  for (const btn of root.getElementsByClassName("midi-player-range")) {
-    btn.classList.add("form-range", "p-1");
-  }
-  for (const btn of root.getElementsByClassName("volume")) {
-    btn.classList.add("w-auto");
-  }
+  sheet.replaceSync(css);
+  return sheet;
 }
 
 function arrangeLayout(midiPlayer) {
@@ -60,13 +59,28 @@ async function simpleTest() {
   await midiPlayer.loadMIDI("midi/travel.mid");
 }
 
+async function partTest() {
+  const audioContext = new AudioContext();
+  if (audioContext.state === "running") await audioContext.suspend();
+  const midy = new Midy(audioContext);
+  const midiPlayer = new MIDIPlayer(midy);
+  midiPlayer.defaultLayout();
+  document.getElementById("partTest").appendChild(midiPlayer.root);
+  await midiPlayer.loadMIDI("midi/hitogo2.mid");
+}
+
 async function stylingTest() {
   const audioContext = new AudioContext();
   if (audioContext.state === "running") await audioContext.suspend();
   const midy = new Midy(audioContext);
   const midiPlayer = new MIDIPlayer(midy);
   midiPlayer.defaultLayout();
-  applyTheme(midiPlayer);
+  const sheet = buildDocumentStylesheet();
+  midiPlayer.applyTheme(sheet, {
+    "midi-player-btn": "btn bg-light-subtle p-1",
+    "midi-player-text": "p-1",
+    "midi-player-range": "form-range",
+  });
   document.getElementById("stylingTest").appendChild(midiPlayer.root);
   await midiPlayer.loadMIDI("midi/hitogo2.mid");
 }
@@ -77,7 +91,11 @@ async function arrangingTest() {
   const midy = new Midy(audioContext);
   const midiPlayer = new MIDIPlayer(midy);
   arrangeLayout(midiPlayer);
-  applyTheme(midiPlayer);
+  const sheet = buildDocumentStylesheet();
+  midiPlayer.applyTheme(sheet, {
+    "midi-player-btn": "btn bg-light-subtle p-1",
+    "midi-player-range": "form-range",
+  });
   document.getElementById("arrangingTest").appendChild(midiPlayer.root);
   await midiPlayer.loadMIDI("midi/0002.mid");
 }
@@ -87,6 +105,7 @@ hljs.registerLanguage("css", css);
 hljs.highlightAll();
 
 simpleTest();
+partTest();
 stylingTest();
 arrangingTest();
 

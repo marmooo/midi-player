@@ -11,23 +11,9 @@
 
 ## Usage
 
-1. Import icon font.
+1. Import the appropriate level of Midy.
 
-```
-@font-face {
-  font-family: "MIDIPlayerIcons";
-  src: url("midi-player-icons.woff2") format("woff2");
-}
-.midi-player-btn {
-  font-family: MIDIPlayerIcons;
-  font-size: 24px;
-  line-height: 1;
-}
-```
-
-2. Import the appropriate level of Midy.
-
-```
+```js
 // import { MidyGMLite as Midy } from "midy/dist/midy-GMLite.min.js";
 // import { MidyGM1 as Midy } from "midy/dist/midy-GM1.min.js";
 // import { MidyGM2 as Midy } from "midy/dist/midy-GM2.min.js";
@@ -38,94 +24,167 @@ if (audioContext.state === "running") await audioContext.suspend();
 const midy = new Midy(audioContext);
 ```
 
-3. Add Player.
+2. Add player.
 
-```
+```js
 import { MIDIPlayer } from "@marmooo/midi-player";
 
 const midiPlayer = new MIDIPlayer(midy);
 midiPlayer.defaultLayout();
 document.getElementById("root").appendChild(midiPlayer.root);
-await midiPlayer.midy.loadMIDI("test.mid");
+await midiPlayer.loadMIDI("test.mid");
 ```
 
 ## Configuration
 
 ### SoundFont
 
-This library supports SF2 and SF3. In addition, it supports multiple soundfonts
-and [splitted soundfonts](https://github.com/marmooo/free-soundfonts) that are
-optimized for playback on the web. it will automatically use splitted
-[GeneralUser GS](https://www.schristiancollins.com/generaluser) for playback,
-but you can also set it as follows.
+This library supports SF2 and SF3. It also supports multiple soundfonts and
+[split soundfonts](https://github.com/marmooo/free-soundfonts) optimized for web
+playback. By default it uses split
+[GeneralUser GS](https://www.schristiancollins.com/generaluser), but you can
+override it as follows.
 
-```
+```js
 const midiPlayer = new MIDIPlayer(midy);
 midiPlayer.soundFontURL = "https://soundfonts.pages.dev/GeneralUser_GS_v1.471";
 ```
 
-```
+```js
 const midiPlayer = new MIDIPlayer(midy);
-await midiPlayer.midy.loadSoundFont("test.sf3")
+await midiPlayer.midy.loadSoundFont("test.sf3");
 ```
 
 ### Layout
 
-All parts can freely change their layout by not using `defaultLayout()`.
+All parts can be arranged freely by building the layout yourself instead of
+calling `defaultLayout()`.
 
-```
+```js
 const midiPlayer = new MIDIPlayer(midy);
 const div = midiPlayer.row();
 div.appendChild(midiPlayer.playPauseResume());
 div.appendChild(midiPlayer.seekBar());
 ```
 
+### Icons
+
+Icons are SVG strings. Default icons are built into the library. You can replace
+any of them via constructor options — only the keys you specify are overridden.
+
+```js
+const midiPlayer = new MIDIPlayer(midy, {
+  icons: {
+    play: `<svg ...>...</svg>`,
+    pause: `<svg ...>...</svg>`,
+    volumeOn: `<svg ...>...</svg>`,
+    volumeOff: `<svg ...>...</svg>`,
+    speed: `<svg ...>...</svg>`,
+    repeatOff: `<svg ...>...</svg>`,
+    repeatOn: `<svg ...>...</svg>`,
+  },
+});
+```
+
 ### Theme
 
-All parts have midi-player-* class so you can be themed with CSS.
+Every element inside the shadow DOM has a `midi-player-*` class and a matching
+`part` attribute, so you can style from outside using either CSS `::part` or
+`applyTheme()`.
 
-- Basic classes
-  - `midi-player-row`
-  - `midi-player-btn`
-  - `midi-player-range`
-  - `midi-player-text`
-- Part classes
-  - `midi-player-play`
-  - `midi-player-pause`
-  - `midi-player-resume`
-  - `midi-player-stop`
-  - `midi-player-currTime`
-  - `midi-player-timeSeparator`
-  - `midi-player-totalTime`
-  - `midi-player-seekBar`
-  - `midi-player-volumeOn`
-  - `midi-player-volumeff`
-  - `midi-player-volumeBar`
-  - `midi-player-speed`
-  - `midi-player-repeatOn`
-  - `midi-player-repeatOff`
+#### Basic classes / parts
 
-You can also style the parts using JavaScript and CSS Framework.
+| Class / part        | Element                             |
+| ------------------- | ----------------------------------- |
+| `midi-player-row`   | wrapper `<div>` for each row        |
+| `midi-player-btn`   | all `<button>` elements             |
+| `midi-player-range` | all `<input type="range">` elements |
+| `midi-player-text`  | all text `<div>` elements           |
 
-```
-const midiPlayer = new MIDIPlayer(midy);
-for (const btn of root.getElementsByClassName("midi-player-btn")) {
-  btn.classList.add("btn", "btn-light-subtle", "p-1");
+#### Part classes
+
+| Part                        | Description        |
+| --------------------------- | ------------------ |
+| `midi-player-start`         | play button        |
+| `midi-player-pause`         | pause button       |
+| `midi-player-resume`        | resume button      |
+| `midi-player-stop`          | stop button        |
+| `midi-player-muteOn`        | mute-on button     |
+| `midi-player-muteOff`       | mute-off button    |
+| `midi-player-volume`        | volume slider      |
+| `midi-player-speed`         | speed button       |
+| `midi-player-speedBar`      | speed slider       |
+| `midi-player-repeatOn`      | repeat-on button   |
+| `midi-player-repeatOff`     | repeat-off button  |
+| `midi-player-seekBar`       | seek slider        |
+| `midi-player-currTime`      | current time text  |
+| `midi-player-timeSeparator` | `/` separator text |
+| `midi-player-totalTime`     | total time text    |
+
+#### Styling with `::part`
+
+Style the shadow DOM from plain CSS without any JavaScript. Works with any
+stylesheet you own.
+
+```css
+midi-player::part(midi-player-btn) {
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  padding: 2px;
+}
+midi-player::part(midi-player-btn):hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+midi-player::part(midi-player-text) {
+  padding: 0 4px;
+  font-size: 0.85em;
 }
 ```
 
-### Icon font
+#### Styling with `applyTheme()` (CSS frameworks)
 
-We use [Material Icons](https://github.com/marella/material-icons) licensed
-under the
-[Apache-2.0](https://github.com/marella/material-icons/blob/main/LICENSE).
-Search for the ligature names you want to use from the
-[official web app](https://marella.me/material-icons/demo/), save them, and
-minimize them using [fontconv](https://github.com/marmooo/fontconv).
+Pass a `CSSStyleSheet` and a class map to inject framework classes (e.g.
+Bootstrap) into the shadow DOM.
 
+`applyTheme()` must be called **after** `defaultLayout()` (or your custom
+layout), so that the shadow DOM elements already exist.
+
+In a `type="module"` script, external stylesheets are guaranteed to have loaded
+by the time the script runs. In an inline `<script>`, call
+`buildDocumentStylesheet()` inside `DOMContentLoaded`.
+
+```js
+// Build once and reuse across multiple players.
+const sheet = new CSSStyleSheet();
+let css = "";
+for (const s of document.styleSheets) {
+  try {
+    for (const r of s.cssRules) css += r.cssText;
+  } catch { /* skip cross-origin sheets */ }
+}
+sheet.replaceSync(css);
+
+const midiPlayer = new MIDIPlayer(midy);
+midiPlayer.defaultLayout();
+midiPlayer.applyTheme(sheet, {
+  "midi-player-btn": "btn bg-light-subtle p-1",
+  "midi-player-text": "p-1",
+  "midi-player-range": "form-range",
+});
+document.getElementById("root").appendChild(midiPlayer.root);
+await midiPlayer.loadMIDI("test.mid");
 ```
-fontconv --ligature play_arrow,pause,stop,volume_down,volume_off,speed,360,repeat \
-  material-icons.woff2 src/midi-player-icons.woff2
+
+Passing the same `CSSStyleSheet` instance to multiple players is safe — it is
+shared via `adoptedStyleSheets` and added only once per player.
+
+### Cleanup
+
+Call `destroy()` when you no longer need a player. It stops playback, releases
+the adopted stylesheets, and removes the element from the DOM.
+
+```js
+midiPlayer.destroy();
 ```
 
 ## License

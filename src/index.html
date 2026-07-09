@@ -31,29 +31,29 @@
     <link id="highlightjs-theme" rel="stylesheet" href="">
     <link class="drop-inline-css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <style>
-      html[data-bs-theme="dark"] .btn-light {
-        --bs-btn-color: #fff;
-        --bs-btn-bg: var(--bs-gray-800);
-        --bs-btn-border-color: var(--bs-gray-800);
-        --bs-btn-hover-color: #fff;
-        --bs-btn-hover-bg: var(--bs-gray-700);
-        --bs-btn-hover-border-color: var(--bs-gray-600);
-        --bs-btn-active-color: #fff;
-        --bs-btn-active-bg: var(--bs-gray-600);
-        --bs-btn-active-border-color: var(--bs-gray-500);
+      #simpleTest { height: 30px; }
+      #partTest { height: 34px; }
+      #stylingTest { height: 34px; }
+      #arrangingTest { height: 34px; }
+
+      #partTest midi-player::part(midi-player-btn) {
+        background: none;
+        border: 1px solid #aaa;
+        border-radius: 4px;
+        padding: 2px;
+        cursor: pointer;
+        color: inherit;
       }
-      @font-face {
-        font-family: "MIDIPlayerIcons";
-        src: url("midi-player-icons.woff2") format("woff2");
+      #partTest midi-player::part(midi-player-btn):hover {
+        background: rgba(0, 0, 0, 0.08);
       }
-      .midi-player-btn {
-        font-family: MIDIPlayerIcons;
-        font-size: 24px;
-        line-height: 1;
+      #partTest midi-player::part(midi-player-text) {
+        padding: 0 4px;
+        font-size: 0.85em;
       }
-      #simpleTest { height:30px; }
-      #stylingTest { height:34px; }
-      #arrangingTest { height:34px; }
+      #partTest midi-player::part(midi-player-range) {
+        cursor: pointer;
+      }
     </style>
     <script data-ad-client="ca-pub-6459713332128733" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
   </head>
@@ -80,8 +80,10 @@
         </p>
         <a class="btn btn-primary" href="https://github.com/marmooo/midi-player" role="button">View on GitHub</a>
       </div>
+
+      <!-- Simple -->
       <div class="card">
-        <div class="card-header">The simplest example with only icon font.</div>
+        <div class="card-header">The simplest example with no extra styles.</div>
         <div class="card-body">
           <div id="simpleTest"></div>
           <div class="text-center">
@@ -91,18 +93,8 @@
       </div>
       <div class="card">
         <div class="card-body">
-          <p>1. Load icon font. You can also style the parts by editing the midi-player-* classes.</p>
-          <pre><code class="language-css">@font-face {
-  font-family: "MIDIPlayerIcons";
-  src: url("midi-player.woff2") format("woff2");
-}
-.midi-player-btn {
-  font-family: MIDIPlayerIcons;
-  font-size: 24px;
-  line-height: 1;
-}</code></pre>
-          <p>2. Import the appropriate level of Midy.</p>
-          <pre><code class="language javascript">import { MidyGMLite as Midy } from "midy/dist/midy-GMLite.min.js";
+          <p>1. Import the appropriate level of Midy.</p>
+          <pre><code class="language-javascript">import { MidyGMLite as Midy } from "midy/dist/midy-GMLite.min.js";
 // import { MidyGM1 as Midy } from "midy/dist/midy-GM1.min.js";
 // import { MidyGM2 as Midy } from "midy/dist/midy-GM2.min.js";
 // import { Midy } from "midy/dist/midy.min.js";
@@ -110,16 +102,64 @@
 const audioContext = new AudioContext();
 if (audioContext.state === "running") await audioContext.suspend();
 const midy = new Midy(audioContext);</code></pre>
-          <p>3. Add player.</p>
+          <p>2. Add player.</p>
           <pre><code class="language-javascript">const midiPlayer = new MIDIPlayer(midy);
 midiPlayer.defaultLayout();
 document.getElementById("simpleTest").appendChild(midiPlayer.root);
 await midiPlayer.loadMIDI("midi/travel.mid");</code></pre>
+          <p>You can also replace icons via constructor options:</p>
+          <pre><code class="language-javascript">const midiPlayer = new MIDIPlayer(midy, {
+  icons: {
+    play: `&lt;svg ...&gt;...&lt;/svg&gt;`,
+    pause: `&lt;svg ...&gt;...&lt;/svg&gt;`,
+    // volumeOn, volumeOff, speed, repeatOff, repeatOn
+  },
+});</code></pre>
+        </div>
+      </div>
+
+      <!-- ::part styling -->
+      <div class="card">
+        <div class="card-header">
+          An example of styling using
+          <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/::part"><code>::part</code></a>.
+        </div>
+        <div class="card-body">
+          <div id="partTest"></div>
+          <div class="text-center">
+            <cite>人心2-HitoGokoro2- <a href="http://www.rengoku-teien.com/">煉獄庭園</a> 煉獄小僧</cite>
+          </div>
         </div>
       </div>
       <div class="card">
+        <div class="card-body">
+          <p>Each element inside the shadow DOM exposes a <code>part</code> attribute,
+          so you can style it from outside with <code>::part</code>.</p>
+          <pre><code class="language-css">midi-player::part(midi-player-btn) {
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  padding: 2px;
+  cursor: pointer;
+}
+midi-player::part(midi-player-btn):hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+midi-player::part(midi-player-text) {
+  padding: 0 4px;
+  font-size: 0.85em;
+}</code></pre>
+          <pre><code class="language-javascript">const midiPlayer = new MIDIPlayer(midy);
+midiPlayer.defaultLayout();
+document.getElementById("partTest").appendChild(midiPlayer.root);
+await midiPlayer.loadMIDI("midi/hitogo2.mid");</code></pre>
+        </div>
+      </div>
+
+      <!-- applyTheme (CSS Framework) -->
+      <div class="card">
         <div class="card-header">
-          An example of styling using <a href="https://github.com/twbs/bootstrap">Bootstrap</a>.
+          An example of styling using
+          <a href="https://github.com/twbs/bootstrap">Bootstrap</a> via <code>applyTheme()</code>.
           You can use any CSS frameworks.
         </div>
         <div class="card-body">
@@ -131,36 +171,35 @@ await midiPlayer.loadMIDI("midi/travel.mid");</code></pre>
       </div>
       <div class="card">
         <div class="card-body">
-          <p>You can style parts by editing the midi-player-* classes,
-          and also via JavaScript.
-          </p>
-          <pre><code class="language-javascript">function applyTheme(midiPlayer) {
-  const root = midiPlayer.root;
-  for (const btn of root.getElementsByClassName("midi-player-btn")) {
-    btn.classList.add("btn", "btn-light", "p-1");
-  }
-  for (const btn of root.getElementsByClassName("midi-player-text")) {
-    btn.classList.add("p-1");
-  }
-  for (const btn of root.getElementsByClassName("midi-player-range")) {
-    btn.classList.add("form-range", "p-1");
-  }
-  for (const btn of root.getElementsByClassName("midi-player-volume")) {
-    btn.classList.add("w-auto");
-  }
+          <p>Pass a <code>CSSStyleSheet</code> and a class map to <code>applyTheme()</code>.
+          The stylesheet is added to <code>adoptedStyleSheets</code>; the class map appends
+          extra classes to matching elements inside the shadow DOM.</p>
+          <pre><code class="language-javascript">// Build a CSSStyleSheet from document styles once and reuse it.
+// Call this after external stylesheets (e.g. Bootstrap) have loaded.
+// In a type="module" script this is guaranteed; in an inline script
+// call it inside DOMContentLoaded.
+const sheet = new CSSStyleSheet();
+let css = "";
+for (const s of document.styleSheets) {
+  try { for (const r of s.cssRules) css += r.cssText; }
+  catch { /* skip cross-origin sheets */ }
 }
+sheet.replaceSync(css);
 
-const audioContext = new AudioContext();
-if (audioContext.state === "running") await audioContext.suspend();
-const midy = new Midy(audioContext);
+// Call applyTheme() after defaultLayout() so shadow DOM elements exist.
 const midiPlayer = new MIDIPlayer(midy);
 midiPlayer.defaultLayout();
-applyTheme(midiPlayer);
+midiPlayer.applyTheme(sheet, {
+  "midi-player-btn": "btn bg-light-subtle p-1",
+  "midi-player-text": "p-1",
+  "midi-player-range": "form-range",
+});
 document.getElementById("stylingTest").appendChild(midiPlayer.root);
 await midiPlayer.loadMIDI("midi/hitogo2.mid");</code></pre>
-          </div>
         </div>
       </div>
+
+      <!-- Arranging layout -->
       <div class="card">
         <div class="card-header">An example of arranging layout.</div>
         <div class="card-body">
@@ -178,15 +217,14 @@ await midiPlayer.loadMIDI("midi/hitogo2.mid");</code></pre>
   div.appendChild(midiPlayer.seekBar());
 }
 
-const audioContext = new AudioContext();
-if (audioContext.state === "running") await audioContext.suspend();
-const midy = new Midy(audioContext);
 const midiPlayer = new MIDIPlayer(midy);
 arrangeLayout(midiPlayer);
-applyTheme(midiPlayer);
-document.getElementById("stylingTest").appendChild(midiPlayer.root);
-await midiPlayer.loadMIDI("midi/explorer.mid");</code></pre>
-          </div>
+midiPlayer.applyTheme(sheet, {
+  "midi-player-btn": "btn bg-light-subtle p-1",
+  "midi-player-range": "form-range",
+});
+document.getElementById("arrangingTest").appendChild(midiPlayer.root);
+await midiPlayer.loadMIDI("midi/0002.mid");</code></pre>
         </div>
       </div>
     </main>
