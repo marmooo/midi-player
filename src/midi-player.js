@@ -132,14 +132,17 @@ export class MIDIPlayer {
   async start() {
     this.isPlaying = true;
     const midy = this.midy;
-    await midy.loadSoundFont(this.getSoundFontPaths());
-    this.startTimer();
-    await midy.start();
-    this.stopTimer();
-    this.isPlaying = false;
-    if (!midy.isPaused && this.currTimeNode) {
-      this.currTimeNode.textContent = "0:00";
-      this.seekBarNode.value = 0;
+    try {
+      await midy.loadSoundFont(this.getSoundFontPaths());
+      this.startTimer();
+      await midy.start();
+    } finally {
+      this.stopTimer();
+      this.isPlaying = false;
+      if (!midy.isPaused && this.currTimeNode) {
+        this.currTimeNode.textContent = "0:00";
+        this.seekBarNode.value = 0;
+      }
     }
   }
 
@@ -151,8 +154,12 @@ export class MIDIPlayer {
     this.pauseNode.style.display = "none";
     this.resumeNode.style.display = "none";
     this.stopTimer();
-    await midy.stop();
-    this.isPlaying = false;
+    try {
+      await midy.stop();
+    } finally {
+      this.isStopping = false;
+      this.isPlaying = false;
+    }
   }
 
   stop() {
@@ -168,11 +175,14 @@ export class MIDIPlayer {
     this.isPlaying = true;
     playNode.style.display = "none";
     pauseNode.style.display = "initial";
-    await this.start();
-    this.isPlaying = false;
-    if (!midy.isPaused) {
-      pauseNode.style.display = "none";
-      playNode.style.display = "initial";
+    try {
+      await this.start();
+    } finally {
+      this.isPlaying = false;
+      if (!midy.isPaused) {
+        pauseNode.style.display = "none";
+        playNode.style.display = "initial";
+      }
     }
   }
 
@@ -183,9 +193,17 @@ export class MIDIPlayer {
     this.pauseNode.style.display = "none";
     this.resumeNode.style.display = "initial";
     this.stopTimer();
-    await midy.pause();
-    this.isPausing = false;
-    this.isPaused = true;
+    try {
+      await midy.pause();
+      this.isPaused = true;
+    } finally {
+      this.isPausing = false;
+      if (!midy.isPaused) {
+        this.pauseNode.style.display = "initial";
+        this.resumeNode.style.display = "none";
+        this.startTimer();
+      }
+    }
   }
 
   async handleResume() {
@@ -195,12 +213,15 @@ export class MIDIPlayer {
     pauseNode.style.display = "initial";
     resumeNode.style.display = "none";
     this.startTimer();
-    await midy.resume();
-    this.stopTimer();
-    this.isPlaying = false;
-    if (!midy.isPaused) {
-      pauseNode.style.display = "none";
-      playNode.style.display = "initial";
+    try {
+      await midy.resume();
+    } finally {
+      this.stopTimer();
+      this.isPlaying = false;
+      if (!midy.isPaused) {
+        pauseNode.style.display = "none";
+        playNode.style.display = "initial";
+      }
     }
   }
 
