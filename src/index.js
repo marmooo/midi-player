@@ -53,6 +53,7 @@ async function simpleTest() {
   const audioContext = new AudioContext();
   if (audioContext.state === "running") await audioContext.suspend();
   const midy = new Midy(audioContext);
+  midy.cacheMode = "chunk";
   const midiPlayer = new MIDIPlayer(midy);
   midiPlayer.defaultLayout();
   document.getElementById("simpleTest").appendChild(midiPlayer.root);
@@ -63,6 +64,7 @@ async function partTest() {
   const audioContext = new AudioContext();
   if (audioContext.state === "running") await audioContext.suspend();
   const midy = new Midy(audioContext);
+  midy.cacheMode = "chunk";
   const midiPlayer = new MIDIPlayer(midy);
   midiPlayer.defaultLayout();
   document.getElementById("partTest").appendChild(midiPlayer.root);
@@ -73,6 +75,7 @@ async function stylingTest() {
   const audioContext = new AudioContext();
   if (audioContext.state === "running") await audioContext.suspend();
   const midy = new Midy(audioContext);
+  midy.cacheMode = "chunk";
   const midiPlayer = new MIDIPlayer(midy);
   midiPlayer.defaultLayout();
   const sheet = buildDocumentStylesheet();
@@ -89,6 +92,7 @@ async function arrangingTest() {
   const audioContext = new AudioContext();
   if (audioContext.state === "running") await audioContext.suspend();
   const midy = new Midy(audioContext);
+  midy.cacheMode = "chunk";
   const midiPlayer = new MIDIPlayer(midy);
   arrangeLayout(midiPlayer);
   const sheet = buildDocumentStylesheet();
