@@ -8,6 +8,8 @@
 - [Basic usage](https://marmooo.github.io/midi-player/)
 - [@marmooo/piano-visualizer](https://marmooo.github.io/piano-visualizer) -
   Beautiful piano visualizer
+- [Free MIDI](https://marmooo.github.io/free-midi/) - Free MIDI search for
+  everyone. Free to listen, copy, play, etc.
 - [Humidy](https://marmooo.github.io/humidy/) - GM2 MIDI mixer app
 - [Timidy](https://marmooo.github.io/timidy/) - Timidity++ style MIDI player
 
