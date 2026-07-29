@@ -202,6 +202,7 @@ export class MIDIPlayer {
   getSoundFontPaths() {
     const paths = [];
     const { midy, soundFontURL } = this;
+    if (!soundFontURL) return paths;
     for (const instrument of midy.instruments) {
       const [bank, program] = instrument.split(":");
       const bankNumber = Number(bank);
