@@ -36,7 +36,7 @@ midiPlayer.defaultLayout();
 document.getElementById("partTest").appendChild(midiPlayer.root);
 await midiPlayer.loadMIDI("midi/hitogo2.mid");</code></pre></div></div><div class=card><div class=card-header>An example of styling using
 <a href=https://github.com/twbs/bootstrap>Bootstrap</a> via <code>applyTheme()</code>.
-You can use any CSS frameworks.</div><div class=card-body><div id=stylingTest></div><div class=text-center><cite>人心2-HitoGokoro2- <a href=http://www.rengoku-teien.com/>煉獄庭園</a> 煉獄小僧</cite></div></div></div><div class=card><div class=card-body><p>Pass a <code>CSSStyleSheet</code> and a class map to <code>applyTheme()</code>.
+You can use any CSS frameworks.</div><div class=card-body><div id=stylingTest></div><div class=text-center><cite>テーマ02 <a href=https://maou.audio/>魔王魂</a> 魔王魂 (CC-BY-4.0)</cite></div></div></div><div class=card><div class=card-body><p>Pass a <code>CSSStyleSheet</code> and a class map to <code>applyTheme()</code>.
 The stylesheet is added to <code>adoptedStyleSheets</code>; the class map appends
 extra classes to matching elements inside the shadow DOM.<pre><code class=language-javascript>// Build a CSSStyleSheet from document styles once and reuse it.
 // Call this after external stylesheets (e.g. Bootstrap) have loaded.
@@ -59,7 +59,7 @@ midiPlayer.applyTheme(sheet, {
   "midi-player-range": "form-range",
 });
 document.getElementById("stylingTest").appendChild(midiPlayer.root);
-await midiPlayer.loadMIDI("midi/hitogo2.mid");</code></pre></div></div><div class=card><div class=card-header>An example of arranging layout.</div><div class=card-body><div id=arrangingTest></div><div class=text-center><cite>Giselle - Pas de deux (1er Acte) <a href=https://www.mutopiaproject.org/>Mutopia Project</a> Adolphe-Charles Adam</cite></div></div></div><div class=card><div class=card-body><pre><code class=language-javascript>function arrangeLayout(midiPlayer) {
+await midiPlayer.loadMIDI("midi/hitogo2.mid");</code></pre></div></div><div class=card><div class=card-header>An example of arranging layout.</div><div class=card-body><div id=arrangingTest></div><div class=text-center><cite>Giselle - Pas de deux (1er Acte) <a href=https://www.mutopiaproject.org/>Mutopia Project</a> Adolphe-Charles Adam (Public Domain)</cite></div></div></div><div class=card><div class=card-body><pre><code class=language-javascript>function arrangeLayout(midiPlayer) {
   const div = midiPlayer.row();
   div.appendChild(midiPlayer.playPauseResume());
   div.appendChild(midiPlayer.seekBar());

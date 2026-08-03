@@ -85,7 +85,7 @@ async function stylingTest() {
     "midi-player-range": "form-range",
   });
   document.getElementById("stylingTest").appendChild(midiPlayer.root);
-  await midiPlayer.loadMIDI("midi/hitogo2.mid");
+  await midiPlayer.loadMIDI("midi/魔王魂-テーマ02.mid");
 }
 
 async function arrangingTest() {
