@@ -45,7 +45,7 @@ const DEFAULT_STYLE = `
 `;
 
 export class MIDIPlayer {
-  soundFontURL = "https://soundfonts.pages.dev/GeneralUser_GS_v1.471";
+  soundFontURL = "https://soundfonts.pages.dev/GeneralUser_GS_v2.0.3";
   midy;
   timer;
   currentTime = 0;
@@ -209,8 +209,9 @@ export class MIDIPlayer {
       const programNumber = Number(program);
       const index = midy.soundFontTable[programNumber][bankNumber];
       if (index !== undefined) continue;
-      const baseName = bankNumber === 128 ? "128" : program;
-      paths.push(`${soundFontURL}/${baseName}.sf3`);
+      const bankDir = String(bankNumber).padStart(3, "0");
+      const programFile = String(programNumber).padStart(3, "0");
+      paths.push(`${soundFontURL}/${bankDir}/${programFile}.sf3`);
     }
     return paths;
   }
